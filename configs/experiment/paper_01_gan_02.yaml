@@ -1,0 +1,39 @@
+# @package _global_
+#
+# to execute this experiment run:
+# python cmrai/train.py experiment=01_cycle_gan_00
+#
+# NOTE (Ivo): training without cycle consistency loss; simples pix2pix GAN
+# NOTE (Ivo): added artificial target misalignment
+# NOTE (Ivo): added registration network and loss for A2B
+
+defaults:
+  - paper_01_gan_01
+  - override /callbacks: [default.yaml, log_fake_b.yaml, log_fakeReg_b]
+
+tags:
+  [
+    "paper",
+    "brats2021",
+    "2d",
+    "cleaned",
+    "gan",
+    "reg",
+    "artificial_target_misalignment",
+  ]
+
+model:
+  # used for registration loss
+  correction_lamda: 20
+  smooth_lamda: 10
+
+  # registration fakeB
+  net_deformation_field_B:
+    _target_: cmrai.models.components.registration.DeformationFieldNet
+    image_size: ${datamodule.image_size}
+    input_channels: ${..net_generator_A2B.input_channels}
+
+  spatial_deformation_B:
+    _target_: cmrai.models.components.registration.SpatialDeformation
+    batch_size: ${datamodule.batch_size}
+    image_size: ${datamodule.image_size}

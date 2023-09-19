@@ -1,0 +1,30 @@
+noise_level: 0
+
+target:
+  affine:
+    _target_: albumentations.Affine
+    p: 1.0
+    rotate: ${tuple:[${eval:-2 * ${datamodule.data_transform.noise_level}}, ${eval:2 * ${datamodule.data_transform.noise_level}}]} # Rotation in degrees [-x, x]
+    translate_percent:
+      "x": ${tuple:[${eval:-0.02 * ${datamodule.data_transform.noise_level}}, ${eval:0.02 * ${datamodule.data_transform.noise_level}}]}
+      "y": ${tuple:[${eval:-0.02 * ${datamodule.data_transform.noise_level}}, ${eval:0.02 * ${datamodule.data_transform.noise_level}}]}
+    scale: ${tuple:[${eval:1 - 0.02 * ${datamodule.data_transform.noise_level}}, ${eval:1 + 0.02 * ${datamodule.data_transform.noise_level}}]}
+    cval: 0
+
+final:
+  pad_if_needed:
+    _target_: albumentations.PadIfNeeded
+    min_width: ${datamodule.image_size}
+    min_height: ${datamodule.image_size}
+    border_mode: 0
+    value: 0
+    p: 1.0
+
+  normalize:
+    _target_: albumentations.Normalize
+    mean: ${datamodule.data_mean}
+    std: ${datamodule.data_std}
+    max_pixel_value: ${datamodule.max_pixel_value}
+
+  to_tensor:
+    _target_: albumentations.pytorch.ToTensorV2

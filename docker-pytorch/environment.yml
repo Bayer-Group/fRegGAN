@@ -1,0 +1,10 @@
+name: base
+channels:
+  - conda-forge
+  - nvidia
+dependencies:
+  - cudatoolkit=11.6.0
+  - pytorch::pytorch=1.12.1=py3.9_cuda11.6_cudnn8.3.2_0
+  - pytorch::torchvision=0.13.1=py39_cu116
+  - python=3.9.13
+  - pip

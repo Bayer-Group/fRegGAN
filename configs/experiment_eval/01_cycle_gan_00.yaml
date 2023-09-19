@@ -1,0 +1,36 @@
+# @package _global_
+#
+# to execute this experiment run:
+# python cmrai/train.py experiment=01_cycle_gan_00
+
+defaults:
+  - override /experiment: paper_01_cycle_gan_00.yaml
+  - override /callbacks:
+      [
+        rich_progress_bar.yaml,
+        metric_to_wandb.yaml,
+        log_fake_b.yaml,
+        save_nii_image.yaml,
+      ]
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+ckpt_artefact: null # If "null" ckpt artefact will be fetched from wandb, otherwiese the specified artefact will be used. Artefact can be wandb artefact or local path.
+
+callbacks:
+  log_example_image_fake_B:
+    img_dpi: 90
+
+paths:
+  log_dir: ${paths.root_dir}/logs_eval/
+
+datamodule:
+  train_artefact: null
+  val_artefact: null
+  test_artefact: "BRATS2021-2d_test_31155:latest"
+
+  batch_size: 32
+
+logger:
+  wandb:
+    job_type: evaluate

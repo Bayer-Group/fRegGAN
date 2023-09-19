@@ -1,0 +1,17 @@
+# @package _global_
+#
+# to execute this experiment run:
+# python cmrai/train.py experiment=01_cycle_gan_00
+
+defaults:
+  - 01_cycle_gan_00
+  - override /experiment: paper_01_cycle_gan_00.yaml
+
+ckpt_artefact: paper_01_cycle_gan:v6 # morning-feather-176
+
+callbacks:
+  save_nii_fake_A:
+    _target_: cmrai.utils.my_callbacks.LogNiiImages
+    image_name: fake_A
+    output_dir: "${paths.output_dir}/predictions_A/"
+    images_to_save: -1

@@ -1,0 +1,12 @@
+# @package _global_
+
+# uses a fix number of training data and validation/test data
+
+defaults:
+  - default.yaml
+
+trainer:
+  max_epochs: 3
+  limit_train_batches: 10
+  limit_val_batches: 5
+  limit_test_batches: 6

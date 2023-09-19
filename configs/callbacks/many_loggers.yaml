@@ -1,0 +1,5 @@
+# train with many callbacks at once
+
+defaults:
+  - default.yaml
+  - wandb.yaml

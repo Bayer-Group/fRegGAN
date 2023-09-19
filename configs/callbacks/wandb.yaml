@@ -1,0 +1,10 @@
+wandb_upload_code:
+  _target_: cmrai.utils.my_callbacks.UploadCodeAsArtifact
+  code_dir: ${original_work_dir}/cmrai
+
+wandb_upload_ckp:
+  _target_: cmrai.utils.my_callbacks.UploadCheckpointsAsArtifact
+  run_name: ${name}
+# TODO (Ivo): fix errors with logging
+# wandb_upload_logs:
+#   _target_: cmrai.utils.my_callbacks.UploadHydraLogAsArtifact

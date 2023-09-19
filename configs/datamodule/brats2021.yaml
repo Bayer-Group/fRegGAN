@@ -1,0 +1,29 @@
+defaults:
+  - data_transform: baseline_transform.yaml
+
+_target_: cmrai.datamodules.brats2021_datamodule.BRATS2021DataModule
+
+data_dir: ${paths.data_dir} # data_dir is specified in train.yaml
+
+# WandB artefact of processed data
+processed_artefact: "BRATS2021_2dClipNorm:latest"
+
+# WandB artefacts for training/validation/testing
+train_artefact: "BRATS2021-2d_train_155000:v0"
+val_artefact: "BRATS2021-2d_val_7750:v0"
+test_artefact: "BRATS2021-2d_test_31155:v0"
+
+n_step_per_epoch: ${eval:20_000 // ${global_batch_size}} # artificially set epoch size to X images
+batch_size: 4
+image_size: 256
+image_channels: 1
+image_dim: 2 # set to 3 for 3d and 2 for 2d processing
+
+data_mean: 0.5
+data_std: 0.5
+max_pixel_value: 1.0
+
+num_workers: 8
+prefetch_factor: 10
+persistent_workers: False
+pin_memory: True

@@ -1,0 +1,11 @@
+# @package _global_
+#
+# to execute this experiment run:
+# python cmrai/train.py experiment=01_cycle_gan_00
+
+defaults:
+  - 01_cycle_gan_00
+  - override /experiment: paper_02_gan_01.yaml
+
+# ckpt_artefact: paper_01_gan_freq:v2 # no noise
+ckpt_artefact: paper_02_gan_freq:v0 # noise

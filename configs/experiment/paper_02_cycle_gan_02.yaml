@@ -1,0 +1,35 @@
+# @package _global_
+#
+# to execute this experiment run:
+# python cmrai/train.py experiment=01_cycle_gan_00
+#
+# NOTE (Ivo): added artificial target misalignment
+# NOTE (Ivo): added registration network and loss for A2B
+# NOTE (Ivo): added registration network and loss for B2A
+# NOTE (Ivo): added freq all loss
+
+defaults:
+  - paper_01_cycle_gan_01
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+task_name: "paper_02_cycle_gan_freq"
+
+tags:
+  [
+    "paper",
+    "brats2021",
+    "2d",
+    "cleaned",
+    "cycle_gan",
+    "artificial_target_misalignment",
+    "freq_all",
+  ]
+
+model:
+  p2p_lamda: 0
+
+  freq_lamda: 0.1
+  freq_weighting: 0.5
+  freq_radius: 21

@@ -1,0 +1,3 @@
+log_metrics_to_wandb:
+  _target_: cmrai.utils.my_callbacks.LogMetricsToWandb
+  test_artefact_name: "${datamodule.test_artefact}"

@@ -1,0 +1,34 @@
+# @package _global_
+#
+# to execute this experiment run:
+# python cmrai/train.py experiment=01_cycle_gan_00
+#
+# NOTE (Ivo): training without cycle consistency loss; simples pix2pix GAN
+# NOTE (Ivo): training with fft-loss low-freq
+
+defaults:
+  - paper_01_cycle_gan_01
+  - override /model: paper_gan.yaml
+  - override /callbacks: [default.yaml, log_fake_b.yaml]
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags:
+  [
+    "paper",
+    "brats2021",
+    "2d",
+    "cleaned",
+    "gan",
+    "artificial_target_misalignment",
+    "freq_hi",
+  ]
+
+# name of the run determines folder name in logs
+task_name: "paper_02_gan_freq"
+
+model:
+  freq_lamda: 1
+  freq_weighting: 1
+  freq_radius: 21

@@ -1,0 +1,10 @@
+# https://pytorch-lightning.readthedocs.io/en/stable/common/trainer.html#trainer-class-api
+_target_: pytorch_lightning.Trainer
+
+strategy: null # https://pytorch-lightning.readthedocs.io/en/stable/extensions/strategy.html
+accelerator: gpu
+devices: 1
+precision: 32 # mixed precision for extra speed-up, Double precision (64), full precision (32), half precision (16) or bfloat16 precision (bf16)
+
+# number of validation steps to execute at the beginning of the training
+num_sanity_val_steps: 0

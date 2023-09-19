@@ -1,0 +1,90 @@
+# @package _global_
+#
+# to execute this experiment run:
+# python cmrai/train.py experiment=paper_01_cycle_gan_00.yaml
+
+defaults:
+  - override /datamodule: brats2021.yaml
+  - override /datamodule/data_transform: none.yaml
+  - override /model: paper_cycle_gan.yaml
+  - override /callbacks: [default.yaml, log_fake_b.yaml, log_fake_a.yaml]
+  - override /logger: wandb.yaml
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags: ["paper", "brats2021", "2d", "cleaned", "cycle_gan"]
+
+# name of the run determines folder name in logs
+task_name: "paper_01_cycle_gan"
+seed: 12345
+
+test: False
+
+datamodule:
+  n_step_per_epoch: ${eval:20_000 // ${global_batch_size}} # artificially set epoch size to X images
+
+  # WandB artefact of processed data
+  processed_artefact: "BRATS2021_2dClipNorm:latest"
+  # WandB artefacts for training/validation/testing
+  train_artefact: "BRATS2021-2d_train_139221:v0"
+  val_artefact: "BRATS2021-2d_val_6891:v0"
+  test_artefact: null
+
+  data_transform:
+    noise_level: 0
+
+    train:
+      affine:
+        _target_: albumentations.Affine
+        p: 1.0
+        rotate: ${tuple:[${eval:-2 * ${datamodule.data_transform.noise_level}}, ${eval:2 * ${datamodule.data_transform.noise_level}}]} # Rotation in degrees [-x, x]
+        translate_percent:
+          "x": ${tuple:[${eval:-0.02 * ${datamodule.data_transform.noise_level}}, ${eval:0.02 * ${datamodule.data_transform.noise_level}}]}
+          "y": ${tuple:[${eval:-0.02 * ${datamodule.data_transform.noise_level}}, ${eval:0.02 * ${datamodule.data_transform.noise_level}}]}
+        scale: ${tuple:[${eval:1 - 0.02 * ${datamodule.data_transform.noise_level}}, ${eval:1 + 0.02 * ${datamodule.data_transform.noise_level}}]}
+        cval: 0
+
+    target:
+      affine:
+        _target_: albumentations.Affine
+        p: 1.0
+        rotate: ${tuple:[${eval:-2 * ${datamodule.data_transform.noise_level}}, ${eval:2 * ${datamodule.data_transform.noise_level}}]} # Rotation in degrees [-x, x]
+        translate_percent:
+          "x": ${tuple:[${eval:-0.02 * ${datamodule.data_transform.noise_level}}, ${eval:0.02 * ${datamodule.data_transform.noise_level}}]}
+          "y": ${tuple:[${eval:-0.02 * ${datamodule.data_transform.noise_level}}, ${eval:0.02 * ${datamodule.data_transform.noise_level}}]}
+        scale: ${tuple:[${eval:1 - 0.02 * ${datamodule.data_transform.noise_level}}, ${eval:1 + 0.02 * ${datamodule.data_transform.noise_level}}]}
+        cval: 0
+
+    final:
+      resize:
+        _target_: albumentations.Resize
+        height: ${datamodule.image_size}
+        width: ${datamodule.image_size}
+        p: 1.0
+
+      normalize:
+        _target_: albumentations.Normalize
+        mean: ${datamodule.data_mean}
+        std: ${datamodule.data_std}
+        max_pixel_value: ${datamodule.max_pixel_value}
+
+      to_tensor:
+        _target_: albumentations.pytorch.ToTensorV2
+
+trainer:
+  # auto_select_gpus: True # does not work well with ddp training
+  # https://github.com/Lightning-AI/lightning/issues/13752
+  # global_step refers to the sum of all optimizer.step() call -> we have two optimizer for GANs, hence global_step will count double
+  # max_steps compares itself with global_step
+  # (NOTE: need to fix max_step, if we ever use accumulate gradient!!)
+  # trainer.fit_loop.epoch_loop._batches_that_stepped
+  log_every_n_steps: ${eval:500 // ${global_batch_size}} # compares against "should_log = (self.trainer.fit_loop.epoch_loop._batches_that_stepped + 1) % self.trainer.log_every_n_steps == 0"
+  max_epochs: 200
+
+logger:
+  wandb:
+    job_type: train
+    group: ${task_name}
+    tags: ${tags}
+    project: "cmrai-brats2021-test"

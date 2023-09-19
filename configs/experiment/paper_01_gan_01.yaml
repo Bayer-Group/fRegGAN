@@ -1,0 +1,24 @@
+# @package _global_
+#
+# to execute this experiment run:
+# python cmrai/train.py experiment=01_cycle_gan_00
+#
+# NOTE (Ivo): training without cycle consistency loss; simples pix2pix GAN
+# NOTE (Ivo): added artificial target misalignment
+
+defaults:
+  - paper_01_gan_00
+
+tags:
+  [
+    "paper",
+    "brats2021",
+    "2d",
+    "cleaned",
+    "gan",
+    "artificial_target_misalignment",
+  ]
+
+datamodule:
+  data_transform:
+    noise_level: 5

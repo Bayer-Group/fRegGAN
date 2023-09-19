@@ -1,0 +1,6 @@
+{
+    "makefile.extensionOutputFolder": "./.vscode",
+    "editor.rulers": [
+    120
+    ]
+}

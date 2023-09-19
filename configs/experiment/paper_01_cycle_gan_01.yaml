@@ -1,0 +1,26 @@
+# @package _global_
+#
+# to execute this experiment run:
+# python cmrai/train.py experiment=01_cycle_gan_00
+#
+# NOTE (Ivo): added artificial target misalignment
+
+defaults:
+  - paper_01_cycle_gan_00
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags:
+  [
+    "paper",
+    "brats2021",
+    "2d",
+    "cleaned",
+    "cycle_gan",
+    "artificial_target_misalignment",
+  ]
+
+datamodule:
+  data_transform:
+    noise_level: 5

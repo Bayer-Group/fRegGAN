@@ -1,0 +1,6 @@
+**/__pycache__
+**/data
+**/.envs
+**/logs
+**/logs_eval
+**/pretrained

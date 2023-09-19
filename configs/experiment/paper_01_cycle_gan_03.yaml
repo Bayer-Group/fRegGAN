@@ -1,0 +1,37 @@
+# @package _global_
+#
+# to execute this experiment run:
+# python cmrai/train.py experiment=01_cycle_gan_00
+#
+# NOTE (Ivo): added artificial target misalignment
+# NOTE (Ivo): added registration network and loss for A2B
+# NOTE (Ivo): added registration network and loss for B2A
+
+defaults:
+  - paper_01_cycle_gan_02
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags:
+  [
+    "paper",
+    "brats2021",
+    "2d",
+    "cleaned",
+    "cycle_gan",
+    "regReg",
+    "artificial_target_misalignment",
+  ]
+
+model:
+  # registration fakeA
+  net_deformation_field_A:
+    _target_: cmrai.models.components.registration.DeformationFieldNet
+    image_size: ${datamodule.image_size}
+    input_channels: ${..net_generator_A2B.input_channels}
+
+  spatial_deformation_A:
+    _target_: cmrai.models.components.registration.SpatialDeformation
+    batch_size: ${datamodule.batch_size}
+    image_size: ${datamodule.image_size}

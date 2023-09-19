@@ -1,0 +1,7 @@
+log_example_image_fake_A:
+  _target_: cmrai.utils.my_callbacks.LogExampleImages
+  name: "img/B2A"
+  image_list: ["real_B", "real_A", "fake_A"]
+  output_dir: ${paths.output_dir}
+  log_train_img_interval: ${eval:10_000 // ${global_batch_size}}
+  log_val_img_interval: ${eval:1_000 // ${global_batch_size}}

@@ -1,0 +1,20 @@
+# @package _global_
+#
+# to execute this experiment run:
+# python cmrai/train.py experiment=01_cycle_gan_00
+
+defaults:
+  - 01_cycle_gan_00
+  - override /experiment: paper_02_cycle_gan_02_a.yaml
+
+ckpt_artefact: paper_02_cycle_gan_freq:v8 # running
+
+callbacks:
+  save_nii_reg_fake_B:
+    _target_: cmrai.utils.my_callbacks.LogNiiImages
+    image_name: regist_fake_B
+    output_dir: "${paths.output_dir}/reg_prediction/"
+    images_to_save: -1
+
+model:
+  metric_on_regist: true

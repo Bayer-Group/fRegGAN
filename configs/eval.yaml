@@ -1,0 +1,26 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - datamodule: brats2021.yaml # choose datamodule with `test_dataloader()` for evaluation
+  - model: cycle_gan.yaml
+  - callbacks: default.yaml
+  - logger: null
+  - trainer: default.yaml
+  - paths: default.yaml
+  - extras: default.yaml
+  - hydra: default.yaml
+
+  # experiment configs allow for version control of specific hyperparameters
+  # e.g. best hyperparameters for given model and datamodule
+  - experiment: null
+  - experiment_eval: ???
+
+global_batch_size: ${world_size:${trainer.devices},${datamodule.batch_size}}
+
+task_name: "eval"
+
+tags: ["dev"]
+
+# passing checkpoint artefact is necessary for evaluation
+ckpt_artefact: ???

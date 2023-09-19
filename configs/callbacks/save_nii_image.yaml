@@ -1,0 +1,18 @@
+save_nii_fake_B:
+  _target_: cmrai.utils.my_callbacks.LogNiiImages
+  image_name: fake_B
+  output_dir: "${paths.output_dir}/predictions/"
+  images_to_save: -1
+  save_deformation_field: False
+
+save_nii_real_B:
+  _target_: cmrai.utils.my_callbacks.LogNiiImages
+  image_name: real_B
+  output_dir: "${paths.output_dir}/target/"
+  images_to_save: -1
+
+save_nii_real_A:
+  _target_: cmrai.utils.my_callbacks.LogNiiImages
+  image_name: real_A
+  output_dir: "${paths.output_dir}/input/"
+  images_to_save: -1

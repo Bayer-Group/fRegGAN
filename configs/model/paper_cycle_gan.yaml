@@ -1,0 +1,48 @@
+_target_: cmrai.models.cycle_reg_gan_module.CycleRegGanLitSystem
+
+optimizer_g:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.0001
+  betas: [0.5, 0.999]
+
+optimizer_d:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.0001
+  betas: [0.5, 0.999]
+
+cycle_lamda: 10
+identity_lamda: 1
+
+use_euclid: false
+
+# generator for A -> B
+net_generator_A2B:
+  _target_: cmrai.models.components.cycle_gan.Generator
+  input_channels: ${datamodule.image_channels}
+  input_size:
+    - ${datamodule.image_size}
+    - ${datamodule.image_size}
+  n_residual_blocks: 9
+  use_conv_transpose: False
+
+# discriminator B
+net_discriminator_B:
+  _target_: cmrai.models.components.discriminator.NLayerDiscriminator
+  input_nc: ${..net_generator_A2B.input_channels}
+
+# generator for B -> A
+net_generator_B2A:
+  _target_: cmrai.models.components.cycle_gan.Generator
+  input_channels: ${datamodule.image_channels}
+  input_size:
+    - ${datamodule.image_size}
+    - ${datamodule.image_size}
+  n_residual_blocks: 9
+  use_conv_transpose: False
+
+# discriminator A
+net_discriminator_A:
+  _target_: cmrai.models.components.discriminator.NLayerDiscriminator
+  input_nc: ${..net_generator_A2B.input_channels}

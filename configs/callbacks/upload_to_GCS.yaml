@@ -1,0 +1,3 @@
+upload_to_GCS:
+  _target_: cmrai.utils.my_callbacks.UploadToGCS
+  folder_to_upload: ${paths.output_dir}
